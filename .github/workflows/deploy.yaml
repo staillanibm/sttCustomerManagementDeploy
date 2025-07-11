@@ -39,6 +39,8 @@ jobs:
 
     - name: Deploy using kubectl
       run: |
+        pwd 
+        ls -la
         kustomize build . | kubectl apply -f -
 
   # newman_tests:
