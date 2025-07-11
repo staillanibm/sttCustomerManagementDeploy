@@ -41,26 +41,26 @@ jobs:
       run: |
         kustomize build . | kubectl apply -f - --wait --timeout=300s
 
-  # newman_tests:
-  #   needs: deploy
-  #   runs-on: ubuntu-latest
+  newman_tests:
+    needs: deploy
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Checkout Code
-  #     uses: actions/checkout@v3
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-  #   - name: Install Newman
-  #     run: |
-  #       npm install -g newman
+    - name: Install Newman
+      run: |
+        npm install -g newman
 
-  #   - name: Run Newman Tests
-  #     run: |
-  #       newman run CustomerManagementAuto.postman_collection.json \
-  #         --env-var "url=$MSR_CUSTOMER_URL" \
-  #         --env-var "userName=$MSR_USERNAME" \
-  #         --env-var "password=$MSR_PASSWORD" \
-  #         --insecure
-  #     env:
-  #       MSR_CUSTOMER_URL: ${{ secrets.MSR_CUSTOMER_URL }}
-  #       MSR_USERNAME: ${{ secrets.MSR_USERNAME }}
-  #       MSR_PASSWORD: ${{ secrets.MSR_PASSWORD }}
+    - name: Run Newman Tests
+      run: |
+        newman run CustomerManagement.postman_collection.json \
+          --env-var "url=$MSR_CUSTOMER_URL" \
+          --env-var "userName=$MSR_USERNAME" \
+          --env-var "password=$MSR_PASSWORD" \
+          --insecure
+      env:
+        MSR_CUSTOMER_URL: ${{ secrets.MSR_CUSTOMER_URL }}
+        MSR_USERNAME: ${{ secrets.MSR_USERNAME }}
+        MSR_PASSWORD: ${{ secrets.MSR_PASSWORD }}
