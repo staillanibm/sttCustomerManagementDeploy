@@ -62,3 +62,5 @@ jobs:
         MSR_CUSTOMER_URL: ${{ secrets.MSR_CUSTOMER_URL }}
         MSR_USERNAME: ${{ secrets.MSR_USERNAME }}
         MSR_PASSWORD: ${{ secrets.MSR_PASSWORD }}
+        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        WEBHOOK_TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
