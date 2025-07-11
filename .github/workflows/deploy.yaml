@@ -55,6 +55,8 @@ jobs:
           --env-var "url=$MSR_CUSTOMER_URL" \
           --env-var "userName=$MSR_USERNAME" \
           --env-var "password=$MSR_PASSWORD" \
+          --env-var "webhookUrl=$WEBHOOK_URL" \
+          --env-var "webhookToken=$WEBHOOK_TOKEN" \
           --insecure
       env:
         MSR_CUSTOMER_URL: ${{ secrets.MSR_CUSTOMER_URL }}
