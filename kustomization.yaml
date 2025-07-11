@@ -1,5 +1,5 @@
 resources:
-  - deployment.yaml
+  - deploy.yaml
 images:
   - name: ghcr.io/staillanibm/msr-customers
     newTag: 1.0.5
