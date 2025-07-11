@@ -7,15 +7,102 @@
 	},
 	"item": [
 		{
+			"name": "Trigger workflow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Status is ok\", function () {",
+							"  pm.expect(jsonData.status).to.eql(\"ok\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function uuidv4() {",
+							"  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {",
+							"    const r = Math.random() * 16 | 0,",
+							"          v = c === 'x' ? r : (r & 0x3 | 0x8);",
+							"    return v.toString(16);",
+							"  });",
+							"}",
+							"",
+							"const uuid = uuidv4();",
+							"const customerName = `Customer ${uuid}`;",
+							"",
+							"// Stocke en variable d'environnement",
+							"pm.environment.set(\"customerName\", customerName);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{webhookToken}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "webhook_key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"001gL000008OS1mQAG\",\n    \"name\": \"{{customerName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{webhookUrl}}",
+					"host": [
+						"{{webhookUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get customer by ID",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"",
+							"pm.test(\"Name equals env variable\", function () {",
+							"  pm.expect(jsonData.name).to.eql(pm.environment.get(\"customerName\"));",
+							"});",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -43,7 +130,7 @@
 					"variable": [
 						{
 							"key": "accountId",
-							"value": "001gL00000DRzb0QAD"
+							"value": "001gL000008OS1mQAG"
 						}
 					]
 				}

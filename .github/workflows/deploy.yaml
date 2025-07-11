@@ -35,7 +35,6 @@ jobs:
     - name: Deploy using kubectl
       run: |
         kustomize build . > deploy_target.yaml
-        cat deploy_target.yaml
         kubectl apply -f deploy_target.yaml --wait --timeout=300s
 
   newman_tests:
