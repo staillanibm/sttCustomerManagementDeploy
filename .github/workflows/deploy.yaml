@@ -39,7 +39,7 @@ jobs:
 
     - name: Deploy using kubectl
       run: |
-        kkustomize build . | kubectl apply -f - --wait --timeout=300s
+        kustomize build . | kubectl apply -f - --wait --timeout=300s
 
   # newman_tests:
   #   needs: deploy
