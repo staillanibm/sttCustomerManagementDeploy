@@ -1,0 +1,66 @@
+name: Deploy to OpenShift
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Kubernetes
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: 'latest'
+
+    - name: Copy the kube config file and use it
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+        chmod 600 $HOME/.kube/config
+        export KUBECONFIG=$HOME/.kube/config
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+
+    - name: Check cluster access
+      run: |
+        kubectl get pods --namespace ${{ vars.K8S_NAMESPACE }}
+
+    - name: Deploy using kubectl
+      run: |
+        kustomize build . | kubectl apply -f -
+
+  # newman_tests:
+  #   needs: deploy
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Checkout Code
+  #     uses: actions/checkout@v3
+
+  #   - name: Install Newman
+  #     run: |
+  #       npm install -g newman
+
+  #   - name: Run Newman Tests
+  #     run: |
+  #       newman run CustomerManagementAuto.postman_collection.json \
+  #         --env-var "url=$MSR_CUSTOMER_URL" \
+  #         --env-var "userName=$MSR_USERNAME" \
+  #         --env-var "password=$MSR_PASSWORD" \
+  #         --insecure
+  #     env:
+  #       MSR_CUSTOMER_URL: ${{ secrets.MSR_CUSTOMER_URL }}
+  #       MSR_USERNAME: ${{ secrets.MSR_USERNAME }}
+  #       MSR_PASSWORD: ${{ secrets.MSR_PASSWORD }}
